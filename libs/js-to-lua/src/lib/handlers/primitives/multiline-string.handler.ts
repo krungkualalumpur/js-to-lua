@@ -1,12 +1,9 @@
-import { createHandler, HandlerFunction } from '../../types';
-import { Expression, TemplateLiteral } from '@babel/types';
+import { BaseNodeHandler, createHandler } from '../../types';
+import { TemplateLiteral } from '@babel/types';
 import {
-  callExpression,
-  identifier,
-  LuaCallExpression,
-  LuaExpression,
   LuaMultilineStringLiteral,
   LuaStringLiteral,
+<<<<<<< HEAD
   memberExpression,
   multilineStringLiteral,
   stringInferableExpression,
@@ -34,13 +31,29 @@ export const createMultilineStringLiteralHandler = (
 };
 
 function getLiteral(literal: TemplateLiteral) {
+=======
+} from '@js-to-lua/lua-types';
+
+export const handleMultilineStringLiteral: BaseNodeHandler<
+  LuaMultilineStringLiteral | LuaStringLiteral,
+  TemplateLiteral
+> = createHandler('TemplateLiteral', (source, config, literal) => {
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
   return containsNewLine(literal)
-    ? multilineStringLiteral(getMultilineString(literal))
-    : stringLiteral(getString(literal));
-}
+    ? {
+        type: 'MultilineStringLiteral',
+        value: getMultilineString(literal),
+      }
+    : {
+        type: 'StringLiteral',
+        value: getString(literal),
+      };
+});
 
 function getString(literal: TemplateLiteral) {
-  return literal.quasis.map((q) => q.value.cooked || q.value.raw).join('%s');
+  return literal.quasis.reduce((accu, curr) => {
+    return accu + (curr.value.cooked || curr.value.raw);
+  }, '');
 }
 
 const getMultilineString = (literal: TemplateLiteral) => {

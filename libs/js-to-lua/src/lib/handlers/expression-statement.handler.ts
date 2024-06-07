@@ -54,12 +54,18 @@ import {
   variableDeclaratorValue,
 } from '@js-to-lua/lua-types';
 
+<<<<<<< HEAD
 import { createMultilineStringLiteralHandler } from './primitives/multiline-string.handler';
 import { createTypeAnnotationHandler } from './type/type-annotation.handler';
 import {
   createFunctionParamsBodyHandler,
   createFunctionParamsHandler,
 } from './function-params.handler';
+=======
+import { handleMultilineStringLiteral } from './primitives/multiline-string.handler';
+import { createTypeAnnotationHandler } from './type-annotation.handler';
+import { createFunctionParamsHandler } from './function-params.handler';
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
 import { createReturnStatementHandler } from './statement/return-statement.handler';
 import { createArrayExpressionHandler } from './expression/array-expression.handler';
 import {
@@ -307,6 +313,7 @@ export const handleUpdateExpression: BaseNodeHandler<
   );
 });
 
+<<<<<<< HEAD
 export const handleUpdateExpressionAsStatement: BaseNodeHandler<
   LuaCallExpression,
   UpdateExpression
@@ -374,6 +381,41 @@ export const handleExpression: BaseNodeHandler<LuaExpression, Expression> =
     ),
     createAwaitExpressionHandler(forwardHandlerRef(() => handleExpression)),
   ]);
+=======
+export const handleExpression: BaseNodeHandler<
+  LuaExpression,
+  Expression
+> = combineExpressionsHandlers<LuaExpression, Expression>([
+  handleNumericLiteral,
+  handleBigIntLiteral,
+  handleStringLiteral,
+  handleMultilineStringLiteral,
+  handleBooleanLiteral,
+  handleNullLiteral,
+  createArrayExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  handleCallExpression,
+  handleObjectExpression,
+  createIdentifierHandler(forwardHandlerFunctionRef(() => typesHandler)),
+  createUnaryExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  createBinaryExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  createLogicalExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  handleFunctionExpression,
+  handleArrowFunctionExpression,
+  handleUpdateExpression,
+  createMemberExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  createAssignmentExpressionHandlerFunction(
+    forwardHandlerRef(() => handleExpression),
+    forwardHandlerRef(() => handleIdentifier),
+    forwardHandlerRef(() => handleObjectField),
+    createBinaryExpressionHandler(forwardHandlerRef(() => handleExpression))
+      .handler
+  ),
+  createConditionalExpressionHandler(forwardHandlerRef(() => handleExpression)),
+  createSequenceExpressionHandler(
+    forwardHandlerRef(() => handleExpressionAsStatement)
+  ),
+]);
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
 
 const { typesHandler, handleTsTypes } = createTypeAnnotationHandler(
   forwardHandlerRef(() => handleExpression),

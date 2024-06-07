@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   identifier as babelIdentifier,
   numericLiteral as babelNumericLiteral,
@@ -19,10 +20,20 @@ import {
   mockNodeWithValue,
   mockNodeWithValueHandler,
 } from '../../testUtils/mock-node';
+=======
+import { TemplateLiteral } from '@babel/types';
+import { LuaMultilineStringLiteral } from '@js-to-lua/lua-types';
+import { handleMultilineStringLiteral } from './multiline-string.handler';
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
 
-const handleMultilineStringLiteral = createMultilineStringLiteralHandler(
-  mockNodeWithValueHandler
-);
+const DEFAULT_NODE = {
+  leadingComments: null,
+  innerComments: null,
+  trailingComments: null,
+  start: null,
+  end: null,
+  loc: null,
+};
 
 const source = '';
 
@@ -56,15 +67,25 @@ describe('Multiline String Handler', () => {
   const testCasesMapFn = (rawTestCase: RawTestCase): TestCase => {
     return {
       itLabel: rawTestCase.itLabel,
-      given: babelTemplateLiteral(
-        [
-          babelTemplateElement({
-            raw: rawTestCase.givenValue,
-          }),
+      given: {
+        ...DEFAULT_NODE,
+        type: 'TemplateLiteral',
+        expressions: [],
+        quasis: [
+          {
+            ...DEFAULT_NODE,
+            type: 'TemplateElement',
+            value: {
+              raw: rawTestCase.givenValue,
+            },
+            tail: true,
+          },
         ],
-        []
-      ),
-      expected: multilineStringLiteral(rawTestCase.expectedValue),
+      },
+      expected: {
+        type: 'MultilineStringLiteral',
+        value: rawTestCase.expectedValue,
+      },
     };
   };
   const testCases = rawTestCases.map(testCasesMapFn);
@@ -76,6 +97,7 @@ describe('Multiline String Handler', () => {
       );
     });
   });
+<<<<<<< HEAD
 
   it('should handle template literal with expressions', () => {
     const given = babelTemplateLiteral(
@@ -119,4 +141,6 @@ describe('Multiline String Handler', () => {
       expected
     );
   });
+=======
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
 });

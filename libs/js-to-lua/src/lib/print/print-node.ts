@@ -309,6 +309,31 @@ function printTypeLiteral(node: LuaTypeLiteral) {
   }}`;
 }
 
+<<<<<<< HEAD
+=======
+function printPropertySignature(node: LuaPropertySignature) {
+  return `${printNode(node.key)}${
+    node.typeAnnotation ? printNode(node.typeAnnotation) : ''
+  }`;
+}
+
+function printMemberExpression(node: LuaMemberExpression): string {
+  return `${printMemberBaseExpression(node.base)}${node.indexer}${printNode(
+    node.identifier
+  )}`;
+}
+
+function printMemberBaseExpression(base: LuaExpression): string {
+  switch (base.type) {
+    case 'TableConstructor':
+    case 'UnhandledExpression':
+      return `(${printNode(base)})`;
+    default:
+      return `${printNode(base)}`;
+  }
+}
+
+>>>>>>> parent of 5751854 (handle template strings with interpolated expressions (#243))
 function printIfStatement(node: LuaIfStatement): string {
   const clauses = [
     node.ifClause,
